@@ -6,6 +6,8 @@ import LibraryLink from "./LibraryLink.jsx";
 import likedSongsImg from "../../img/likedSongs.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import { createPlaylist } from "../../store/thunks/user.js";
+import { useEffect, useState } from "react";
+import axios from "../../api/axios.js";
 // Thư viện danh sách ca khúc
 const Library = () => {
   const { id, likedPlaylists, followedArtists, playlists } = useSelector(
@@ -13,14 +15,35 @@ const Library = () => {
   );
   const dispatch = useDispatch();
 
+  const [sharePlaylistData, setSharePlaylistData] = useState(null);
+
   const isArtist = (el) => el.role === "artist";
 
   const handleCreatePlaylist = () => {
     dispatch(createPlaylist());
   };
 
-  const saved = (list) =>
-    list
+  useEffect(() => {
+    const fetcher = async () => {
+      const res = await axios.get(`/playlists/share`);
+      setSharePlaylistData(res.data.data.playlists);
+    };
+
+    fetcher();
+  }, []);
+
+  const saved = (list) => {
+    const uniqueIds = new Set();
+    const uniqueItems = [];
+
+    list.forEach((item) => {
+      if (!uniqueIds.has(item.id)) {
+        uniqueIds.add(item.id);
+        uniqueItems.push(item);
+      }
+    });
+
+    return uniqueItems
       .sort((a, b) => (a.name > b.name ? 1 : -1))
       .map((item) => (
         <LibraryLink
@@ -31,7 +54,8 @@ const Library = () => {
         >
           {item.name}
         </LibraryLink>
-      ));
+      ))
+  };
 
   return (
     <div className="library">
@@ -55,7 +79,7 @@ const Library = () => {
             Ca khúc yêu thích
           </LibraryLink>
 
-          {saved([...likedPlaylists, ...followedArtists, ...playlists])}
+          {saved([...likedPlaylists, ...followedArtists, ...playlists, ...(Array.isArray(sharePlaylistData) ? sharePlaylistData : [])])}
         </div>
       )}
     </div>
