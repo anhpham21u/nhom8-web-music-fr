@@ -1,11 +1,11 @@
-import "./Player.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { dislikeSong, likeSong } from "../../store/thunks/user";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { playPause } from "../../store/reducers/player";
-import { nextSong, prevSong } from "../../store/reducers/queue";
-import axios from "../../api/axios";
-import { Link } from "react-router-dom";
+import './Player.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { dislikeSong, likeSong } from '../../store/thunks/user';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { playPause } from '../../store/reducers/player';
+import { nextSong, prevSong } from '../../store/reducers/queue';
+import axios from '../../api/axios';
+import { Link,NavLink } from 'react-router-dom';
 import {
   RiHeart2Fill,
   RiHeart2Line,
@@ -18,9 +18,10 @@ import {
   RiVolumeDownLine,
   RiVolumeMuteLine,
   RiVolumeUpLine,
-} from "react-icons/ri";
+} from 'react-icons/ri';
+import { FaCommentAlt } from 'react-icons/fa';
 
-//Chức năng chơi nhạc 
+//Chức năng chơi nhạc
 const Player = () => {
   const [volume, setVolume] = useState(100);
   const [duration, setDuration] = useState(0);
@@ -45,7 +46,7 @@ const Player = () => {
 
     progressRef.current.value = time;
     progressRef.current.style.setProperty(
-      "--range-progress",
+      '--range-progress',
       `${(progressRef.current.value / duration) * 100}%`,
     );
 
@@ -53,7 +54,6 @@ const Player = () => {
   }, [audioRef, duration, progressRef, setCurrentTime]);
   // Tránh việc re-render giữa việc tắt nhạc và bật nhạc
   useEffect(() => {
-    
     if (audioRef.current === undefined) return;
 
     if (isPlaying) {
@@ -94,7 +94,7 @@ const Player = () => {
   //Tăng, giảm âm lượng
   const volumeChangeHandler = (e) => {
     setVolume(e.target.value);
-    e.target.style.setProperty("--range-progress", `${e.target.value}%`);
+    e.target.style.setProperty('--range-progress', `${e.target.value}%`);
   };
 
   const onLoadedMetadataHandler = () => {
@@ -112,19 +112,19 @@ const Player = () => {
   };
 
   // Điều khiển chức năng
-  navigator.mediaSession.setActionHandler("previoustrack", () => {
+  navigator.mediaSession.setActionHandler('previoustrack', () => {
     dispatch(prevSong());
   });
 
-  navigator.mediaSession.setActionHandler("nexttrack", () => {
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
     dispatch(nextSong());
   });
 
-  navigator.mediaSession.setActionHandler("play", () => {
+  navigator.mediaSession.setActionHandler('play', () => {
     dispatch(playPause());
   });
 
-  navigator.mediaSession.setActionHandler("pause", () => {
+  navigator.mediaSession.setActionHandler('pause', () => {
     dispatch(playPause());
   });
 
@@ -132,7 +132,7 @@ const Player = () => {
     handleNext();
   };
 
-  // Hàm hiển thị 
+  // Hàm hiển thị
   const formatTime = (time) => {
     if (time && !isNaN(time)) {
       const minutes = Math.floor(time / 60);
@@ -141,7 +141,7 @@ const Player = () => {
       const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
       return `${formatMinutes}:${formatSeconds}`;
     }
-    return "00:00";
+    return '00:00';
   };
 
   const userLikedSong = () => {
@@ -206,13 +206,14 @@ const Player = () => {
               <RiSkipForwardMiniFill onClick={handleNext} />
               {repeatSong ? (
                 <RiRepeatOneLine
-                  className={"player__repeat"}
+                  className={'player__repeat'}
                   onClick={repeatSongHandler}
                 />
               ) : (
                 <RiRepeatOneLine onClick={repeatSongHandler} />
               )}
             </div>
+
             <div className="player__range">
               <span className="player__range-time">
                 {formatTime(currentTime)}
@@ -226,7 +227,11 @@ const Player = () => {
               <span className="player__range-time">{formatTime(duration)}</span>
             </div>
           </div>
+
           <div className="player__volume">
+            <NavLink to="/comment">
+              <FaCommentAlt className="flex-auto" />
+            </NavLink>
             {Number(volume) === 0 ? (
               <RiVolumeMuteLine />
             ) : Number(volume) < 50 ? (

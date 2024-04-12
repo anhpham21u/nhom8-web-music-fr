@@ -16,6 +16,7 @@ import Search from "./components/app/Search/Search";
 import LikedSongs from "./components/app/Playlist/LikedSongs";
 import Reset from "./components/auth/Reset";
 import Forgot from "./components/auth/Forgot";
+import Comment from "./components/app/Comment/Comment";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Admin from "./components/admin/Admin";
@@ -45,6 +46,7 @@ function AppRoutes() {
               <Route path="/likedSongs" element={<LikedSongs />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/comment" element={<Comment />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </App>

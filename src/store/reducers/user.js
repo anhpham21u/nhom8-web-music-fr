@@ -14,6 +14,9 @@ import {
   deletePlaylist,
   getAllPlaylists,
   logoutUser,
+  getComment,
+  createComment,
+  deleteComment,
 } from "../thunks/user";
 import { dislikePlaylist, likePlaylist } from "../thunks/playlist";
 import { toast } from "react-toastify";
@@ -143,6 +146,15 @@ export const userSlice = createSlice({
       // Bỏ thích danh sách
       .addCase(dislikePlaylist.fulfilled, (state, action) => {
         state.data.likedPlaylists = action.payload;
+      })
+      .addCase(getComment.fulfilled, (state, action) => {
+        state.data.comments = action.payload;
+      })
+      .addCase(createComment.fulfilled, (state, action) => {
+        state.data.comments = action.payload;
+      })
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        state.data.comments = action.payload;
       });
   },
 });

@@ -240,3 +240,45 @@ export const deletePlaylist = createAsyncThunk(
     }
   },
 );
+
+export const getComment = createAsyncThunk(
+  "user/getComment",
+  async (id) => {
+    try {
+      const res = await axios.get(`/comments/${id}`);
+
+      return res.data.data.comments;
+    } catch (err) {
+      throw err;
+    }
+  },
+);
+
+export const createComment = createAsyncThunk(
+  "user/createComment",
+  async () => {
+    try {
+      const res = await axios.post("/comments");
+
+      toast.success("Bình luận được thêm vào");
+
+      return res.data.data.user.comments;
+    } catch (err) {
+      throw err;
+    }
+  },
+); 
+
+export const deleteComment = createAsyncThunk(
+  "user/deleteComment",
+  async (id) => {
+    try {
+      const res = await axios.delete(`/comments/${id}`);
+
+      toast.success("Bình luận bị loại bỏ");
+      return res.data.data.comments;
+    } catch (err) {
+      throw err;
+    }
+  },
+);
