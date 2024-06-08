@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import axios from '../../../api/axios';
 import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
 
 const Comment = () => {
   const user = useSelector((state) => state.user.data);
@@ -11,6 +12,9 @@ const Comment = () => {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
 
+  /**
+  * Hàm xử lý GET các bình luận
+  */
   useEffect(() => {
     const fetcher = async () => {
       const res = await axios.get(`/comments/${song.id}`);
@@ -18,7 +22,21 @@ const Comment = () => {
     };
 
     fetcher();
-  }, [song, user, comments]);
+  }, [song]);
+
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_SERVER_URL);
+
+    // // Lắng nghe sự kiện 'message' từ server
+    socket.on('test', (msg) => {
+      console.log(msg);
+    });
+
+    // Cleanup khi component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   /**
   * Hàm xử lý binh luận
