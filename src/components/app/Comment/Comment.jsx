@@ -9,29 +9,16 @@ const Comment = () => {
   const queue = useSelector((state) => state.queue.list);
   const song = queue[currentIndex];
   const [commentText, setCommentText] = useState('');
-
-  // Danh sách bình luận giả lập
-  const comments = [
-    { id: 1, user: 'Alice', text: 'This is a great article!' },
-    { id: 2, user: 'Bob', text: 'I found this very helpful.' },
-    { id: 3, user: 'Charlie', text: 'Thanks for sharing!' },
-  ];
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    console.log(user);
-  }, [song, user]);
+    const fetcher = async () => {
+      const res = await axios.get(`/comments/${song.id}`);
+      setComments(res.data);
+    };
 
-  // useEffect(() => {
-  //   const fetcher = async () => {
-  //     const res = await axios.get(`/songs?sort=-plays&limit=5`);
-  //     const res2 = await axios.get(`/songs?sort=-createdAt&limit=5`);
-
-  //     setTopSongs(res.data.data.songs);
-  //     setNewReleases(res2.data.data.songs);
-  //   };
-
-  //   fetcher();
-  // }, []);
+    fetcher();
+  }, [song, user, comments]);
 
   /**
   * Hàm xử lý binh luận
@@ -39,12 +26,12 @@ const Comment = () => {
   const handleComment = async (e) => {
     e.preventDefault();
 
-    if (song, user) {
+    if (song, user, commentText.trim() !== '') {
       await axios.post(`/comments/`, {
         // songId, userId, comment
         songId: song.id,
         userId: user.id,
-        comment: commentText,
+        comment: commentText.trim(),
       });
       setCommentText('');
       toast.success('Bạn đã comment thành công');
@@ -81,9 +68,9 @@ const Comment = () => {
       {/* List comment */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="p-4 border border-gray-700 rounded-lg bg-gray-900 text-white shadow-sm">
-            <p className="font-semibold text-[#1DB954]">{comment.user}</p>
-            <p>{comment.text}</p>
+          <div key={comment._id} className="p-4 border border-gray-700 rounded-lg bg-gray-900 text-white shadow-sm">
+            <p className="font-semibold text-[#1DB954]">{comment.userId.name}</p>
+            <p>{comment.comment}</p>
           </div>
         ))}
       </div>
