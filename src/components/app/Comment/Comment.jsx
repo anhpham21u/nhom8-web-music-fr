@@ -5,6 +5,15 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 const Comment = () => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+
   const user = useSelector((state) => state.user.data);
   const currentIndex = useSelector((state) => state.queue.current);
   const queue = useSelector((state) => state.queue.list);
@@ -70,7 +79,7 @@ const Comment = () => {
 
   return (
     <div className='pt-[9.4rem] pr-[2.4rem] pb-[2.4rem] pl-[2.4rem] bg-black min-h-screen'>
-      <h1 className="text-2xl font-bold mb-6 text-white">Bình luận</h1>
+      <h1 className="text-2xl font-bold mb-6 text-white">Bình luận <span className='text-[#1DB954] text-3xl'>{ song.name }</span></h1>
 
       {/* Input comment */}
       <form onSubmit={handleComment} className="mb-6">
@@ -95,9 +104,17 @@ const Comment = () => {
       {/* List comment */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment._id} className="p-4 border border-gray-700 rounded-lg bg-gray-900 text-white shadow-sm">
-            <p className="font-semibold text-[#1DB954]">{comment.userId.name}</p>
-            <p>{comment.comment}</p>
+          <div key={comment._id} className="p-4 border border-gray-700 rounded-lg bg-gray-900 text-white shadow-sm flex justify-between items-start">
+            <div>
+              <p className="font-semibold text-[#1DB954]">{comment.userId.name}</p>
+              <p className='break-all mt-2'>{comment.comment}</p>
+              <p className="text-gray-500 text-[12px] mt-3">{(new Date(comment.createdAt)).toLocaleDateString('vi-VN', options)}</p>
+            </div>
+            {/* <button
+              className="ml-4 p-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 focus:outline-none"
+            >
+              Delete
+            </button> */}
           </div>
         ))}
       </div>
