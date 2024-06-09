@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from "react-toastify";
 import axios from '../../../api/axios';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ const Comment = () => {
   const song = queue[currentIndex];
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
+  const commentsRef = useRef(comments); // Tạo ref cho comments
 
   /**
   * Hàm xử lý GET các bình luận
@@ -19,6 +20,7 @@ const Comment = () => {
     const fetcher = async () => {
       const res = await axios.get(`/comments/${song.id}`);
       setComments(res.data);
+      commentsRef.current = res.data; // Cập nhật ref với comments vừa fetch
     };
 
     fetcher();
@@ -27,9 +29,16 @@ const Comment = () => {
   useEffect(() => {
     const socket = io(import.meta.env.VITE_SERVER_URL);
 
-    // // Lắng nghe sự kiện 'message' từ server
-    socket.on('test', (msg) => {
-      console.log(msg);
+    socket.on('new message', (msg) => {  // msg: same form as get comments response
+      if (msg.songId !== song.id) {
+        return;
+      }
+
+      setComments((prevComments) => {
+        const newComments = [msg, ...prevComments];
+        commentsRef.current = newComments; // Cập nhật ref với comments mới
+        return newComments;
+      });
     });
 
     // Cleanup khi component unmount
