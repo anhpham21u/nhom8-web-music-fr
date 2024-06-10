@@ -31,9 +31,9 @@ function ProfileDropdown({ data }) {
             <a href="/profile" className="block w-full text-left px-4 py-2 text-xl text-white-700 hover:bg-white/10 focus:outline-none">
               Thông tin tài khoản
             </a>
-            <button className="block w-full text-left px-4 py-2 text-xl text-white-700 hover:bg-white/10 focus:outline-none">
+            {/* <button className="block w-full text-left px-4 py-2 text-xl text-white-700 hover:bg-white/10 focus:outline-none">
               Cài đặt
-            </button>
+            </button> */}
            
             <button className="block w-full text-left px-4 py-2 text-xl text-white-700 hover:bg-white/10 focus:outline-none" onClick={logoutHandler}>
               Đăng xuất

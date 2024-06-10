@@ -52,7 +52,7 @@ const Artist = () => {
             <h1 className="artist__name">{artist.name}</h1>
             <p>
               {artist.songs.reduce((acc, song) => acc + song.plays, 0)}{" "}
-              người nghe hằng tháng
+              lượt nghe
             </p>
           </div>
 
@@ -67,12 +67,12 @@ const Artist = () => {
 
           <div className="artist__songs">
             <div>
-              <h2 className="h2">Phổ biến</h2>
+              <h2 className="h2">Danh sách bài hát</h2>
               <List list={artist.songs} />
             </div>
-            <div>
+            {/* <div>
               <h2 className="h2">Ca khúc yêu thích</h2>
-            </div>
+            </div> */}
           </div>
         </div>
       ) : (
